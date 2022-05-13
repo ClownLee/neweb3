@@ -4,6 +4,7 @@ var indexApis = require('../controllers/apis/index')
 
 /* GET home page. */
 router.get('/', indexApis.index);
-router.post('/demo', indexApis.demo);
+router.get('/demo', indexApis.demo);
+router.get('/caonima', indexApis.caonima);
 
 module.exports = router;
