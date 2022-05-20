@@ -11,6 +11,8 @@ module.exports = {
         res.send(web3.eth)
     },
     caonima (req, res, next) {
-        res.send({ name: 'Jack Ma', age: 50, sex: 1 })
+
+        
+        res.send()
     }
 }
