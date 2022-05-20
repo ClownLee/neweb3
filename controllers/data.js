@@ -3,7 +3,7 @@ const obj1 = {
     b: { b1: 1 },
     c: { c1: {
         cc1: 1,
-    } },
+    }, c2: { cc1: '啊哈哈哈' } },
     d: { d1: 1 },
 }
 const obj2 = {
@@ -11,7 +11,7 @@ const obj2 = {
     b: { b2: 2 },
     c: { c1: {
         cc2: 2
-    } },
+    }, c2: { cc2: '啊哈哈哈' } },
     d: { d2: 2 },
 }
 const obj3 = {
@@ -42,12 +42,14 @@ const multidimensionalObjectMerging = (...args) => {
 
         const fKey = Object.keys(first)
         const sKey = Object.keys(second)
-
-        fKey.concat(sKey).filter(item => !sKey.includes(item)).forEach(key => {
+        const diff = [...new Set(fKey.concat(sKey).filter(item => !sKey.includes(item)))]
+        diff.forEach(key => {
             obj[key] = first[key] || second[key]
         })
 
-        fKey.concat(sKey).filter(item => sKey.includes(item)).forEach(key => {
+        const common = [...new Set(fKey.concat(sKey).filter(item => sKey.includes(item)))]
+
+        common.forEach(key => {
             if(typeof first[key] === 'object' && typeof second[key] === 'object') {
                 obj[key] = multidimensionalObjectMerging(first[key], second[key])
             } else {
@@ -61,4 +63,40 @@ const multidimensionalObjectMerging = (...args) => {
     }
 }
 
-console.log(multidimensionalObjectMerging(obj1, obj2, obj3, obj4))
+const deleteObjectSomeItems = (main, ...args) => {
+    let first = args.shift()
+    
+    if(first) {
+        const mKey = Object.keys(main)
+        const fKey = Object.keys(first)
+        const keys = [...new Set(mKey.concat(fKey).filter(item => fKey.includes(item)))]
+        
+        keys.forEach(key => {
+            if(typeof main[key] === 'object' && typeof first[key] === 'object') {
+                deleteObjectSomeItems(main[key], first[key])
+            } else {
+                delete main[key]
+            }
+        })
+
+        deleteObjectSomeItems(main, ...args)
+    }
+    
+    return main
+}
+
+// console.log(multidimensionalObjectMerging(obj1, obj2, obj3, obj4))
+
+const main = {
+    a1: '1000',
+    a: { a1: 1, a2: 2, a3: 3, a4: 4 },
+    b: { b1: 1, b2: 2, b3: 3, b4: 4 },
+    c: {
+        c2: { cc1: '啊哈哈哈', cc2: '啊哈哈哈' },
+        c1: { cc1: 1, cc2: 2, cc3: 3, cc4: 4 }
+    },
+    d: { d1: 1, d2: 2, d3: 3, d4: 4 },
+    e: { e3: 3, e4: 4 }
+}
+
+console.log(deleteObjectSomeItems(main,  obj2))
