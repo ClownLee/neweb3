@@ -4,7 +4,7 @@ var indexApis = require('../controllers/apis/index')
 
 /* GET home page. */
 router.get('/', indexApis.index);
-router.get('/demo', indexApis.demo);
-router.get('/caonima', indexApis.caonima);
+router.get('/getBalance', indexApis.getBalance);
+router.get('/contract', indexApis.contract);
 
 module.exports = router;
